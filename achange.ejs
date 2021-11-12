@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel="stylesheet" href="page2.css">
+</head>
+<body>
+    <div class="top">
+        <div class="top1">
+            <img src="clogo.png">
+        </div>
+        <div class="top2">
+            <p class="top21">You choose, We do it</p>
+            <p class="top22">St. Joseph's College of Engineering</p>
+            <p class="top23">Department of computer Science & Engineering</p>
+        </div>
+        <div class="top3">
+            <img src="clogo1.PNG" class="top31">
+        </div>
+    </div>
+    <div class="outer">
+        <div class="nav" style="height: 430px;">
+            <div class="head_section">
+              <img src="user.png" alt="">
+              <div class="name">
+                <h3><%= username %> </h3>
+              </div>
+            </div>
+            <div class="nav_links">
+                <ul>
+                    <li><a href="details"><i class="fi-rr-browser"></i><span>Staff Details</span></a></li>
+                    <li><a href="addteacher"><i class="fi-rr-document-signed"></i></i><span>Add Teacher</span></a></li>
+                    <li><a href="addsubject"><i class="fi-rr-document-signed"></i></i><span>Add Subject</span></a></li>
+                    <li><a href="changepass"><i class="fi-rr-lock"></i></i><span>Change Password</span></a></li>
+                    <li><a href="logout"><i class="fi-rr-power"></i><span>Log Out</span></a></li>
+                  </ul>
+            </div>
+          </div>
+          <div class="upload">
+              <h3 style="margin-left: 25%;">Change Password</h3>
+              <form id="pass" method="POST" action="/password">
+                  <label for="curp" style="margin-left: 10%;">Current Password</label>
+                  <input type="text" id="cur" required="required" autocomplete="off" name="curp">
+                  <br>
+                  <label for="newp" style="margin-left: 10%;">New Password</label>
+                  <input type="text" id="new" required="required" autocomplete="off" name="newp">
+                  <br>
+                  <label for="curp" style="margin-left: 20%">Re-Enter New Password</label>
+                  <input type="text" id="re" required="required"autocomplete="off" name="rnewp">
+                  <br>
+                  <input type="number" value="1" style="display: none;" name="status" id="status">
+                <button type="submit" style="margin: 5% 0% 0% 45%;" id="sub">Submit</button>
+              </form>
+          </div>
+    </div>   
+    <script>
+        var stat='<%-stats%>';
+        if(stat==1)
+        window.alert("Password changed Successfully");
+        var cur;
+        var cur1='<%-password%>';
+        document.getElementById("cur").addEventListener("keyup",function()
+        {
+            cur=document.getElementById("cur").value;
+        });
+        var new1 ;
+        var new2 ;
+        document.getElementById("new").addEventListener("keyup",function()
+        {
+            new1=document.getElementById("new").value;
+        });
+        document.getElementById("re").addEventListener("keyup",function()
+        {
+            new2=document.getElementById("re").value;
+        });
+        document.getElementById("sub").addEventListener("click",function()
+        {
+            if(new1!=new2)
+            {document.getElementById("status").setAttribute("value","0");
+            window.alert("New password does not match re-entered password");
+            }
+            if(cur!=cur1)
+            {document.getElementById("status").setAttribute("value","0");
+            window.alert("Current Password not Matching");
+            }
+
+        });
+    </script>   
+</body>
+</html>

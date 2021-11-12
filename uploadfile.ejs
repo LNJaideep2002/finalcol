@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel="stylesheet" href="page2.css">
+</head>
+<body>
+    <div class="top">
+        <div class="top1">
+            <img src="clogo.png">
+        </div>
+        <div class="top2">
+            <p class="top21">You choose, We do it</p>
+            <p class="top22">St. Joseph's College of Engineering</p>
+            <p class="top23">Department of computer Science & Engineering</p>
+        </div>
+        <div class="top3">
+            <img src="clogo1.PNG" class="top31">
+        </div>
+    </div>
+    <div class="outer">
+        <div class="nav">
+            <div class="head_section">
+              <img src="user.png" alt="">
+              <div class="name">
+                <h3><%=username%> </h3>
+              </div>
+            </div>
+            <div class="nav_links">
+                <ul>
+                    <li><a href="details"><i class="fi-rr-browser"></i><span>Staff Details</span></a></li>
+                    <li><a href="uploadfile"><i class="fi-rr-document-signed"></i></i><span>Upload File</span></a></li>
+                    <li><a href="generatefile"><i class="fi-rr-magic-wand"></i></i><span>Generate File</span></a></li>
+                    <li><a href="changepass"><i class="fi-rr-lock"></i></i><span>Change Password</span></a></li>
+                    <li><a href="addexam"><i class="fi-rr-lock"></i></i><span>Add Exam</span></a></li>
+                    <li><a href="logout"><i class="fi-rr-power"></i><span>Log Out</span></a></li>
+                  </ul>
+            </div>
+          </div>
+          <div class="upload">
+              <h3>Upload file</h3>
+              <form action="uploading" method="POST" enctype="multipart/form-data">
+                <div class="uploadinput">
+                  <label for="st" >Pos File:</label>
+                  <input type="checkbox" style="width:13px;" id="pos" autocomplete="off" name="pos">
+                <br>
+                </div>
+                <div class="uploadinput">
+                  <label for="batch">Batch :</label>
+                  <input type="text" list="batch0" id="batch" autocomplete="off" name="batch" required="required">
+                  <datalist id="batch0">
+                      <option  id="batch1"></option>
+                      <option  id="batch2"></option>
+                      <option  id="batch3"></option>
+                      <option  id="batch4"></option>
+                      <option  id="batch5"></option>         
+                  </datalist>
+                  <br>
+                </div>
+                <div class="uploadinput" >
+                    <label for="depart">Department :</label>
+                    <input type="text" list="depart0" id="depart" autocomplete="off" name="depart" required="required">
+                    <datalist id="depart0">
+                        <option  >CSE</option>
+                        <option  >ECE</option>
+                        <option  >MECH</option>
+                        <option  >CIVIL</option>
+                        <option  >IT</option>    
+                        <option  >EEE</option>     
+                        <option  >CHE</option>  
+                        <option  >BIO</option> 
+                        <option  >EIE</option>         
+                    </datalist>
+                    <br>
+                  </div>
+                <div class="uploadinput">
+                  <label for="sem">Semester :</label>
+                  <input type="text" id="sem" list="sem0"  name="semester" required="required">
+                  <datalist id="sem0">
+                      <option  id="">Semester 1</option>
+                      <option  id="">Semester 2</option>
+                      <option  id="">Semester 3</option>
+                      <option  id="">Semester 4</option>
+                      <option  id="">Semester 5</option>
+                      <option  id="">Semester 6</option>
+                      <option  id="">Semester 7</option>
+                      <option  id="">Semester 8</option>        
+                  </datalist>
+                  <br>
+                </div>
+                <div class="uploadinput">
+                <label for="sub">Subject :</label>
+                <input type="text" id="sub" list="sub0"  autocomplete="off" name="subject" required="required">
+                <datalist id="sub0"></datalist>
+                <br>
+                </div>
+                <div class="uploadinput">
+                  <label for="exa">Exam :</label>
+                <input type="text" id="exa" list="exa0" autocomplete="off" name="exam" required="required">
+                <datalist id="exa0"> 
+                </datalist>
+                <br>
+                </div>               
+                <br>
+                <input type="file" id="file" accept=".xlsx" style="margin-top: -20px;"" name="file" required="required">
+                <button type="submit">Submit</button>
+            </form>
+          </div>
+    </div>   
+    <script>
+        var subjects='<%-subjects%>';
+        var exam='<%-exam%>';
+       
+        exam=exam.split(",");
+        subjects=subjects.split(",");
+        // console.log(subjects);
+        // console.log(exam);
+        var status='<%-status%>';
+        if(status==1)
+        window.alert("File Uploaded Successfully");
+        var y=new Date().getFullYear();
+        for(i=0;i<5;i++)
+        document.getElementById("batch"+(i+1)).innerHTML=""+(y-i)+"-"+(y-i+4);
+        document.getElementById("sem").addEventListener("keyup",function()
+        {
+            var subjects1=[];
+            for(i=0;i<subjects.length;i++)
+            {
+               var res=subjects[i].search(document.getElementById("depart").value+"#"+document.getElementById("batch").value+"#"+document.getElementById("sem").value);
+               if(res!=-1)
+            {
+                subjects1.push(subjects[i].split("#")[3]);
+            }
+            }
+            var html="";
+            for(i=0;i<subjects1.length;i++)
+            {
+                html+="<option id=\"\">"+subjects1[i]+"</option>"
+            }
+            document.getElementById("sub0").innerHTML=html;
+        })
+        var cos=0;
+        document.getElementById("sub").addEventListener("keyup",function()
+        {
+            var exam1=[];
+            
+            for(i=0;i<exam.length;i++)
+            {
+                var res=exam[i].search(document.getElementById("depart").value+"#"+document.getElementById("batch").value+"#"+document.getElementById("sem").value+"#"+document.getElementById("sub").value)
+                if(res!=-1)
+            {
+                exam1.push(exam[i].split("#")[4]);
+            }
+            }
+            var html="";
+            console.log(exam1);
+            for(i=0;i<exam1.length;i++)
+            {
+                html+="<option id=\"\">"+exam1[i]+"</option>"
+            }
+            document.getElementById("exa0").innerHTML=html;
+            
+        });
+        var t=0;
+        document.getElementById("pos").addEventListener("click",function()
+        {
+            if(t==0)
+            {
+                document.getElementById("exa").setAttribute("disabled","disabled");
+                t=1;
+            }else{
+                document.getElementById("exa").removeAttribute("disabled");
+                t=0;
+            }
+        });
+    </script>   
+</body>
+</html>

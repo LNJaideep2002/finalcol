@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/81ea002fd8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="page2.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+        </style>
+</head>
+<body>
+    <div class="top">
+        <div class="top1">
+            <img src="clogo.png">
+        </div>
+        <div class="top2">
+            <p class="top21">You choose, We do it</p>
+            <p class="top22">St. Joseph's College of Engineering</p>
+            <p class="top23">Department of computer Science & Engineering</p>
+        </div>
+        <div class="top3">
+            <img src="clogo1.PNG" class="top31">
+        </div>
+    </div>
+    <div class="outer">
+        <div class="nav">
+            <div class="head_section">
+              <img src="user.png" alt="">
+              <div class="name">
+                <h3><%=username%></h3>
+              </div>
+            </div>
+            <div class="nav_links">
+                <ul>
+                    <li><a href="details"><i class="fi-rr-browser"></i><span>Staff Details</span></a></li>
+                    <li><a href="uploadfile"><i class="fi-rr-document-signed"></i></i><span>Upload File</span></a></li>
+                    <li><a href="generatefile"><i class="fi-rr-magic-wand"></i></i><span>Generate File</span></a></li>
+                    <li><a href="changepass"><i class="fi-rr-lock"></i></i><span>Change Password</span></a></li>
+                    <li><a href="logout"><i class="fi-rr-power"></i><span>Log Out</span></a></li>
+                  </ul>
+            </div>
+          </div>
+          <div class="upload" style="padding-bottom: 10px;margin-bottom: 10px;">
+              <h3>Generate file</h3>
+              <form action="/generate" method="POST">
+                <div class="uploadinput">
+                  <label for="batch">Batch :</label>
+                  <input type="text" list="batch0" id="batch" autocomplete="off" name="batch" required="required">
+                  <datalist id="batch0">
+                      <option  id="batch1"></option>
+                      <option  id="batch2"></option>
+                      <option  id="batch3"></option>
+                      <option  id="batch4"></option>
+                      <option  id="batch5"></option>         
+                  </datalist>
+                  <br>
+                </div>
+                <div class="uploadinput" >
+                    <label for="depart">Department :</label>
+                    <input type="text" list="depart0" id="depart" autocomplete="off" name="depart" required="required">
+                    <datalist id="depart0">
+                        <option  >CSE</option>
+                        <option  >ECE</option>
+                        <option  >MECH</option>
+                        <option  >CIVIL</option>
+                        <option  >IT</option>    
+                        <option  >EEE</option>     
+                        <option  >CHE</option>  
+                        <option  >BIO</option> 
+                        <option  >EIE</option>         
+                    </datalist>
+                    <br>
+                  </div>
+                <div class="uploadinput">
+                  <label for="sem">Semester :</label>
+                  <input type="text" id="sem" list="sem0"  name="semester" autocomplete="off" required="required">
+                  <datalist id="sem0">
+                      <option  id="">Semester 1</option>
+                      <option  id="">Semester 2</option>
+                      <option  id="">Semester 3</option>
+                      <option  id="">Semester 4</option>
+                      <option  id="">Semester 5</option>
+                      <option  id="">Semester 6</option>
+                      <option  id="">Semester 7</option>
+                      <option  id="">Semester 8</option>        
+                  </datalist>
+                  <br>
+                </div>
+                <div class="uploadinput">
+                  <label for="sub">Subject :</label>
+                  <input type="text" id="sub" list="sub0"  name="subject" autocomplete="off" required="required">
+                  <datalist id="sub0"></datalist>          
+                  <br> 
+                </div>
+                <div class="uploadinput">
+                  <label for="tar">Target :</label>
+                  <input type="number" id="tar"  name="target" autocomplete="off" required="required">
+                  <br>
+                </div> 
+                <button type="submit" style="margin: 20px 0px 0px 240px">Generate</button>
+                <a href="/generatedfile"  style="display: none;" target="_blank" id="download">File Generated  <i class="fas fa-download"></i></a>
+            </form>
+          </div>
+    </div>   
+    <script>
+        var y=new Date().getFullYear();
+        var subjects='<%-subjects%>';
+        console.log(subjects);
+        subjects=subjects.split(",");
+        var filemiss='<%-filemiss%>';
+        console.log(filemiss);
+        var genst='<%-genst%>';
+        filemiss=filemiss.split(",");
+        console.log(filemiss);
+        if(filemiss.length>1||filemiss[0].length>3)
+        {
+          filemiss=filemiss.join("\n");
+          window.alert("THESE FILES ARE MISSING \n"+filemiss)
+        }
+        if(Number(genst)==1)
+        {
+          window.alert("FILES ARE GENERATED SUCCESSFULLY");
+          document.getElementById("download").removeAttribute("style");
+        }
+        for(i=0;i<5;i++)
+        document.getElementById("batch"+(i+1)).innerHTML=""+(y-i)+"-"+(y-i+4);
+        document.getElementById("sem").addEventListener("keyup",function()
+        {
+            var subjects1=[];
+            for(i=0;i<subjects.length;i++)
+            {
+               var res=subjects[i].search(document.getElementById("depart").value+"#"+document.getElementById("batch").value+"#"+document.getElementById("sem").value);
+               if(res!=-1)
+            {
+                subjects1.push(subjects[i].split("#")[3]);
+            }
+            }
+            var html="";
+            for(i=0;i<subjects1.length;i++)
+            {
+                html+="<option id=\"\">"+subjects1[i]+"</option>"
+            }
+            document.getElementById("sub0").innerHTML=html;
+        })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel="stylesheet" href="page2.css">
+</head>
+<body>
+    <div class="top">
+        <div class="top1">
+            <img src="clogo.png">
+        </div>
+        <div class="top2">
+            <p class="top21">You choose, We do it</p>
+            <p class="top22">St. Joseph's College of Engineering</p>
+            <p class="top23">Department of computer Science & Engineering</p>
+        </div>
+        <div class="top3">
+            <img src="clogo1.PNG" class="top31">
+        </div>
+    </div>
+    <div class="outer">
+        <div class="nav" style="margin-bottom: 20px;">
+            <div class="head_section">
+              <img src="user.png" alt="">
+              <div class="name">
+                <h3><%=username%></h3>
+              </div>
+            </div>
+            <div class="nav_links">
+              <ul>
+                <li><a href="details"><i class="fi-rr-browser"></i><span>Staff Details</span></a></li>
+                <li><a href="uploadfile"><i class="fi-rr-document-signed"></i></i><span>Upload File</span></a></li>
+                <li><a href="generatefile"><i class="fi-rr-magic-wand"></i></i><span>Generate File</span></a></li>
+                <li><a href="addexam"><i class="fi-rr-lock"></i></i><span>Add Exam</span></a></li>
+                <li><a href="changepass"><i class="fi-rr-lock"></i></i><span>Change Password</span></a></li>
+                <li><a href="logout"><i class="fi-rr-power"></i><span>Log Out</span></a></li>
+              </ul>
+            </div>
+          </div>
+    <div class="details" style="height: 430px;">
+      <h3 id="head">Staff Details</h3>
+      <br>
+      <h4><span class="head1">Name :</span> <span class="head2"><%=name%></span></h4>
+      <br>
+      <h4><span class="head1">Username :</span> <span class="head2"><%=username%></span></h4>
+      <br>
+      <h4><span class="head1">Email :</span> <span class="head2"><%=email%></span></h4>
+      <br>
+      <h4><span class="head1">Post :</span> <span class="head2"><%=post%></span></h4>
+    </div>
+  </div>
+  <script>
+  </script>
+</body>
+</html>  

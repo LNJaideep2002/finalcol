@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <style>
+      .border{
+        padding-top:5px;
+        padding-right:5px;
+        padding-left:5px;
+        padding-bottom: 5px;
+        color:black;
+        font-size:9.0pt;
+        font-weight:700;
+        font-style:normal;
+        text-decoration:none;
+        font-family:Calibri, sans-serif;
+        vertical-align:middle;
+        border:.5pt solid windowtext;
+        white-space:normal;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h3 style="margin:2% 0% 0% 30%;align-content: center;font-size: 30;">St. Joseph's College of Engineering</h3>
+      <h3 style="margin:1% 0% 0% 38%">Department of <dep></h3>
+      <h3 style="margin:1% 0% 0% 40%"><sem></h3>
+      <p style="margin:1% 0% 0% 35%">Subject : <sub></p>
+      <p style="margin:1% 0% 0% 5%;font-size: 20;font-weight: bold;">Rubrics for CO attainment on Internal Assessment <span style="margin-left:50px;">Rubrics for CO attainment on External Assessment</span> </p>
+      <p style="margin: 20px 0px 0px 50px;">Attainment Level 1 : 50% of the students scored 50% (target) of the mark <span style="margin-left:30px;">Attainment Level 1 : 50% of the students scored above average mark</span></p>
+      <p style="margin: 10px 0px 0px 50px;">Attainment Level 2 : 60% of the students scored 50% (target) of the mark <span style="margin-left:30px;">Attainment Level 2 : 60% of the students scored above average mark</span></p>
+      <p style="margin: 10px 0px 0px 50px;">Attainment Level 3 : 70% of the students scored 50% (target) of the mark <span style="margin-left:30px;">Attainment Level 3 : 70% of the students scored above average mark</span></p>
+      <br>
+      <p style="margin: 30px 0px 0px 20px;">Target: <tar></p>
+      </div>

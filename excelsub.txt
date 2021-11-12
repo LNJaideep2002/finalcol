@@ -1,0 +1,423 @@
+var mongoose=require('mongoose');
+var xl =require("xlsx");
+// mongoose.connect('mongodb://localhost/cse',{useNewUrlParser: true, useUnifiedTopology: true});
+// var schema_batch=mongoose.Schema({Semester: Number,exam: Array,file: Array});
+// var model=mongoose.model('batch',schema_batch);
+var noofcos=5;
+exam=['CSE#2017-2021#Semester 1#Engineering Mathematics - I#IAE-Test[cos1-cos2-]',
+'CSE#2017-2021#Semester 1#Engineering Mathematics - I#Quize[cos1-]',
+'CSE#2017-2021#Semester 1#Engineering Mathematics - I#Assignment[cos1-]',
+'CSE#2017-2021#Semester 1#Engineering Mathematics - I#IAE-Test[cos2-cos3-]',
+'CSE#2017-2021#Semester 1#Engineering Mathematics - I#IAE-Test[cos3-cos4-]',
+'CSE#2017-2021#Semester 1#Engineering Mathematics - I#IAE-Test[cos5-]',
+'CSE#2017-2021#Semester 1#Engineering Mathematics - I#Model[]',
+'CSE#2017-2021#Semester 1#Engineering Mathematics - I#University[]',
+];
+var file=['CSE#2017-2021#Semester 1#Engineering Mathematics - I#IAE-Test[cos1-cos2-].xlsx',
+'CSE#2017-2021#Semester 1#Engineering Mathematics - I#IAE-Test[cos2-cos3-].xlsx',
+    'CSE#2017-2021#Semester 1#Engineering Mathematics - I#Quize[cos1-].xlsx',
+    'CSE#2017-2021#Semester 1#Engineering Mathematics - I#Assignment[cos1-].xlsx',
+    'CSE#2017-2021#Semester 1#Engineering Mathematics - I#IAE-Test[cos3-cos4-].xlsx',
+    'CSE#2017-2021#Semester 1#Engineering Mathematics - I#IAE-Test[cos5-].xlsx',
+    'CSE#2017-2021#Semester 1#Engineering Mathematics - I#Model[].xlsx',
+    'CSE#2017-2021#Semester 1#Engineering Mathematics - I#University[].xlsx',
+    'Pos#CSE#2017-2021#Semester 1#Engineering Mathematics - I.xlsx'
+  ];
+var reqdata={
+    batch: '2017-2021',
+    depart: 'CSE',
+    semester: 'Semester 1',
+    subject: 'Engineering Mathematics - I',
+    target: '50'
+  }
+var target=Number(reqdata.target);
+var cos={}
+for(i=1;i<=noofcos;i++)
+{
+    cos["cos"+i]={exams:[],marks:[],div:0,noofstabtar:0,perofatt:0,attlevel:0,coatt:0,poattyorn:"y"};
+}
+if(file[0].search("Pos")==-1)
+var wb1=xl.readFile("./public/"+file[0]);
+else
+var wb1=xl.readFile("./public/"+file[1]);
+var ws1=wb1.Sheets["Sheet1"]; 
+var data=xl.utils.sheet_to_json(ws1);
+for(k in cos)
+{
+    for(i=0;i<data.length;i++)
+    {
+        cos[k].marks.push({reg:data[i].Register,mark:0});
+    }
+}
+// console.log(exam[0].split("#")[4].split("["))
+for(i=0;i<exam.length;i++)
+{
+    if(exam[i].search("Model")==-1&&exam[i].search("University")==-1)
+    {
+      
+        var cosin=exam[i].split("#")[4].split("[")[1].split("]")[0].split("-");
+        var wb1=xl.readFile("./public/"+exam[i]+".xlsx");
+        var ws1=wb1.Sheets["Sheet1"]; 
+        var data=xl.utils.sheet_to_json(ws1);
+        // console.log(cosin);
+        for(t=0;t<cosin.length-1;t++)
+        {
+            cos[cosin[t]].div++;
+            var temp=exam[i].split("#")[4].split("[")[0];
+            var f=0;
+            for(n=0;n<cos[cosin[t]].exams.length;n++)
+            {
+                if(temp==cos[cosin[t]].exams[n])
+                f=1;
+            }
+            if(f==0)
+            cos[cosin[t]].exams.push(temp)
+            for(k=0;k<data.length;k++)
+            {
+                cos[cosin[t]].marks[k].mark+=data[k].Mark;
+            }
+        }
+    }
+    else{
+        if(exam[i].search("Model")!=-1)
+        {
+            var wb1=xl.readFile("./public/"+exam[i]+".xlsx");
+            var ws1=wb1.Sheets["Sheet1"]; 
+            var data=xl.utils.sheet_to_json(ws1); 
+            // console.log(data);
+            
+            for(j in cos)
+            {
+                for(k=0;k<cos[j].marks.length;k++)
+                {
+                    cos[j].marks[k].mark=Math.floor(cos[j].marks[k].mark*1/cos[j].div);
+                }
+            }
+            for(j in cos)
+            {
+                for(t=0;t<data.length;t++)
+                {
+                    cos[j].marks[t].mark=Math.floor(cos[j].marks[t].mark*0.8+data[t].Mark*0.2);
+                }
+            }
+        }
+       
+    }
+}
+var university={
+    noofstabavg:0,                 // No of Students above average
+    perofatt:0,
+    attlevel:0
+} 
+var wbg=xl.readFile("./public/Grade.xlsx");
+var wsg=wbg.Sheets["grade"]; 
+var datag= xl.utils.sheet_to_json(wsg);
+var endofsem=[]   // university Marks
+var unifilename;
+for(i=0;i<file.length;i++)
+{
+    if(file[i].search("University")!=-1)
+    {
+        unifilename=file[i]
+    }
+}
+var wbu=xl.readFile("./public/"+unifilename);
+var wsu=wbu.Sheets["Sheet1"]; 
+var datau= xl.utils.sheet_to_json(wsu);
+for(i=0;i<datau.length;i++)
+{
+    for(j in datag[0])
+    {
+        if(datau[i].Mark==datag[0][j])
+        endofsem.push(Number(j.split('m')[1]));
+    }
+}
+
+for(i=0;i<endofsem.length;i++)  // calculate the sum of all university marks
+    university.noofstabavg+=endofsem[i];
+university.noofstabavg/=datau.length;
+var uniavg=university.noofstabavg;
+university.noofstabavg=0;
+for(i=0;i<endofsem.length;i++)
+{
+    if(endofsem[i]>uniavg)
+    university.noofstabavg++;
+}
+for(i in cos)
+{
+    for(j=0;j<cos[i].marks.length;j++)
+    {
+        if(cos[i].marks[j].mark>target)
+        cos[i].noofstabtar++;
+    }
+}
+university.perofatt=(university.noofstabavg/(datau.length/100)).toFixed(2);
+if(university.perofatt>70)
+university.attlevel=3
+else if(university.perofatt>60)
+university.attlevel=2
+else if(university.perofatt>50)
+university.attlevel=1
+for(i in cos)
+{
+    cos[i].perofatt=(cos[i].noofstabtar/(datau.length/100)).toFixed(2);
+}
+for(i in cos)
+{
+    if(cos[i].perofatt>70)
+    cos[i].attlevel=3
+   else if(cos[i].perofatt>60)
+    cos[i].attlevel=2
+    else if(cos[i].perofatt>50)
+    cos[i].attlevel=1
+}
+for(i in cos)
+{
+    cos[i].coatt=(university.attlevel*0.8+ cos[i].attlevel*0.2).toFixed(2);
+    if(cos[i].coatt>=2.5)
+    cos[i].poattyorn="Y"
+    else
+    cos[i].poattyorn="N"
+}
+var posfile;
+for(i=0;i<file.length;i++)
+{
+    if(file[i].search("Pos")!=-1)
+    {
+        posfile=file[i]
+    }
+}
+var wbp=xl.readFile("./public/"+posfile);
+var wsp=wbp.Sheets["Sheet1"]; 
+var datap= xl.utils.sheet_to_json(wsp);
+// console.log(datap);
+var poattaiment={}; // po attaiment
+for(j in datap[0])
+{ 
+    var posum=0; // to add and multiply
+    var po1sum=0; // to add the column po1
+    for(i=0;i<datap.length;i++)
+    if(j!="COs")
+    {
+        posum+=cos["cos"+(i+1)].coatt*datap[i][j];
+        po1sum+=datap[i][j];
+        if(po1sum==0)
+        poattaiment[j]=0.00
+        else
+        poattaiment[j]=(posum/po1sum).toFixed(2);
+    }
+}
+// console.log(poattaiment);
+// console.log(university)
+// console.log(cos)
+var fs=require("fs");
+var html=fs.readFileSync("./headhtml.txt",{encoding:'utf8',flag:'r'});
+html=html.split("<sem>").join(""+reqdata.semester);
+html=html.split("<sub>").join(""+reqdata.subject);
+html=html.split("<tar>").join(""+reqdata.target);
+html+="<div><table style='border-collapse:collapse;table-layout:fixed;width:auto'>";
+html+="<tr> <td class='border' rowspan='2' >S:NO</td><td class='border' rowspan='2'  >Register Number</td>"
+for(i=1;i<=noofcos;i++)
+{
+    html+=`<td class='border' colspan='${cos["cos"+i].exams.length}'>${"CO"+i}</td>`
+}
+html+=`<td class='border' rowspan='2'>Model</td><td class='border' colspan='2'>University</td><td class='border' colspan='${noofcos}'>Marks for Course Outcomes</td></tr><tr>`
+for(i in cos)
+{
+    for(j=0;j<cos[i].exams.length;j++)
+    html+=`<td class="border">${cos[i].exams[j]}</td>`
+}
+html+="<td class='border'>G</td><td class='border'>M</td>";
+for(i=1;i<=noofcos;i++)
+{
+    html+=`<td class='border'>${"CO"+i}</td>`;
+}
+html+="</tr>";
+var iaecos={}
+for(i=1;i<=noofcos;i++)
+{
+    iaecos["cos"+i]={
+        div:0,
+        marks:[]
+    }
+}
+for(j in iaecos)
+{
+    for(i=0;i<datau.length;i++)
+    {
+        iaecos[j].marks.push({mark:0});
+    }
+}
+for(i=0;i<exam.length;i++)
+{
+    if(exam[i].search("IAE-Test")!=-1)
+    {
+        var cosin=exam[i].split("#")[4].split("[")[1].split("]")[0].split("-");
+        var wb1=xl.readFile("./public/"+exam[i]+".xlsx");
+        var ws1=wb1.Sheets["Sheet1"]; 
+        var data=xl.utils.sheet_to_json(ws1);
+        // console.log(cosin);
+        for(j=0;j<cosin.length-1;j++)
+        {
+            iaecos[cosin[j]].div++;
+            for(t=0;t<data.length;t++)
+            {
+                iaecos[cosin[j]].marks[t].mark+=data[t].Mark;
+            }
+        }
+    }
+}
+for(i in iaecos)
+{
+    for(j=0;j<iaecos[i].marks.length;j++)
+    {
+        iaecos[i].marks[j].mark=Math.floor(iaecos[i].marks[j].mark*1/iaecos[i].div);
+    }
+}
+// console.log(iaecos["cos"+2].marks);
+// console.log(cos);
+var filename;
+for(k=0;k<file.length;k++)
+{
+    if(file[k].search("Model")!=-1)
+    {
+        filename=file[k]
+    }
+}
+var wb1=xl.readFile("./public/"+filename);
+var ws1=wb1.Sheets["Sheet1"]; 
+var datamodel=xl.utils.sheet_to_json(ws1);
+// console.log(datau)
+// console.log(endofsem);
+for(i=1;i<=datau.length;i++)
+{
+    html+="<tr>";
+    html+=`<td class="border">${i}</td>`;
+    html+=`<td class="border">${datau[i-1].Register}</td>`;
+    for(j in cos)
+    {
+        for(t=0;t<cos[j].exams.length;t++)
+        {
+            if(cos[j].exams[t]=="IAE-Test")
+            {
+                html+=`<td class="border">${iaecos[j].marks[i-1].mark}</td>`;
+            }
+            else{
+                var filename;
+                for(k=0;k<file.length;k++)
+                {
+                    var con=""+cos[j].exams[t]+"\\["+j
+                    if(file[k].search(con)!=-1)
+                    {
+                        filename=file[k]
+                    }
+                }
+                var wb1=xl.readFile("./public/"+filename);
+                var ws1=wb1.Sheets["Sheet1"]; 
+                var data=xl.utils.sheet_to_json(ws1);
+                html+=`<td class="border">${data[i-1].Mark}</td>`
+            }
+        }
+    }
+    html+=`<td class="border">${datamodel[i-1].Mark}</td>`;
+    html+=`<td class="border">${datau[i-1].Mark}</td>`;
+    html+=`<td class="border">${endofsem[i-1]}</td>`;
+    for(j in cos)
+    {
+        html+=`<td class="border">${cos[j].marks[i-1].mark}</td>`;
+    }
+}
+html+="</tr><tr>"
+var col=4;
+for(j in cos)
+{
+    col+=cos[j].exams.length
+}
+html+=`<td class="border" style="text-align: center" colspan='${col}'>No. of students scored above target</td>`
+html+=`<td class="border">${university.noofstabavg}</td>`;
+for(j in cos)
+{
+    html+=`<td class="border">${cos[j].noofstabtar}</td>`;
+}
+html+="</tr><tr>";
+html+=`<td class="border" style="text-align: center" colspan='${col}'>% of Attainment</td>`
+html+=`<td class="border">${university.perofatt}</td>`;
+for(j in cos)
+{
+    html+=`<td class="border">${cos[j].perofatt}</td>`;
+}
+html+="</tr><tr>";
+html+=`<td class="border" style="text-align: center" colspan='${col}'>Attainment Level</td>`
+html+=`<td class="border">${university.attlevel}</td>`;
+for(j in cos)
+{
+    html+=`<td class="border">${cos[j].attlevel}</td>`;
+}
+html+="</tr><tr>";
+html+=`<td class="border" style="text-align: center" colspan='${col}'>CO Attainment(20% of Internal + 80% of External)</td>`
+html+=`<td class="border">-</td>`;
+for(j in cos)
+{
+    html+=`<td class="border">${cos[j].coatt}</td>`;
+}
+html+="</tr></table><table style='border-collapse:collapse;table-layout:fixed;width:auto;margin-top: 20px;'><tr>";
+var noofpos=-1;
+for(j in datap[0])
+{
+    if(j.search("S")==-1)
+    noofpos++
+}
+noofpos+=4;
+// console.log(noofpos)
+html+=`<td class='border' colspan='${noofpos}' style="text-align: center">Calculation of PO Attainment</td></tr><tr><td class="border">CO's</td><td class="border">CO Attainment</td><td class="border">Attainment</td>`
+for( j in datap[0])
+{
+    if(j.search("S")==-1&&j!="COs")
+    html+=`<td class='border'>${j}</td>`
+}
+html+="</tr>";
+for(i=1;i<=noofcos;i++)
+{
+    html+="<tr>"
+    html+=`<td class='border'>${"CO"+i}</td>`
+    html+=`<td class='border'>${cos["cos"+i].coatt}</td>`
+    html+=`<td class='border'>${cos["cos"+i].poattyorn}</td>`
+    for(j in datap[i-1])
+    if(j.search("S")==-1&&j!="COs")
+    html+=`<td class='border'>${datap[i-1][j]}</td>`
+    html+="</tr>"
+}
+html+="<tr><td class='border' style='text-align: center' colspan='3'>PO Attainment</td>";
+for(j in poattaiment)
+{
+    if(j.search("S")==-1&&j!="COs")
+    html+=`<td class='border'>${poattaiment[j]}</td>`   
+}
+html+="</tr></table><table style='border-collapse:collapse;table-layout:fixed;width:auto;margin-top: 20px;'><tr>";
+var noofpos=0;
+for(j in datap[0])
+{
+    if(j.search("S")!=-1)
+    noofpos++
+}
+noofpos+=3;
+html+=`<td class='border' colspan='${noofpos}' style="text-align: center">Calculation of PSO Attainment</td></tr><tr><td class="border">CO's</td><td class="border">CO Attainment</td><td class="border">Attainment</td>`
+for( j in datap[0])
+{
+    if(j.search("S")!=-1)
+    html+=`<td class='border'>${j}</td>`
+}
+html+="</tr>";
+for(i=1;i<=noofcos;i++)
+{
+    html+="<tr>"
+    html+=`<td class='border'>${"CO"+i}</td>`
+    html+=`<td class='border'>${cos["cos"+i].coatt}</td>`
+    html+=`<td class='border'>${cos["cos"+i].poattyorn}</td>`
+    for(j in datap[i-1])
+    if(j.search("S")!=-1)
+    html+=`<td class='border'>${datap[i-1][j]}</td>`
+    html+="</tr>"
+}
+html+="</table>"
+fs.writeFileSync("co.html",html,"utf8");

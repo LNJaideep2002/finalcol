@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel="stylesheet" href="page2.css">
+</head>
+<body>
+    <div class="top">
+        <div class="top1">
+            <img src="clogo.png">
+        </div>
+        <div class="top2">
+            <p class="top21">You choose, We do it</p>
+            <p class="top22">St. Joseph's College of Engineering</p>
+            <p class="top23">Department of computer Science & Engineering</p>
+        </div>
+        <div class="top3">
+            <img src="clogo1.PNG" class="top31">
+        </div>
+    </div>
+    <div class="outer">
+        <div class="nav" style="height: 430px;">
+            <div class="head_section">
+              <img src="user.png" alt="">
+              <div class="name">
+                <h3><%=username%></h3>
+              </div>
+            </div>
+            <div class="nav_links">
+              <ul>
+                <li><a href="details"><i class="fi-rr-browser"></i><span>Staff Details</span></a></li>
+                <li><a href="addteacher"><i class="fi-rr-document-signed"></i></i><span>Add Teacher</span></a></li>
+                <li><a href="addsubject"><i class="fi-rr-document-signed"></i></i><span>Add Subject</span></a></li>
+                <li><a href="changepass"><i class="fi-rr-lock"></i></i><span>Change Password</span></a></li>
+                <li><a href="logout"><i class="fi-rr-power"></i><span>Log Out</span></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="upload" style="margin-bottom: 2%;">
+              <h3 style="margin-left: 35%;">Add Teacher</h3>
+              <form id=""method="POST" action="/aaddteacherdata">
+                <div class="uploadinput">
+                    <label for="name" style="margin-left: 15%;">Name:</label>
+                    <input type="text" id="name" required="required" autocomplete="off"  name="name">
+                    <br>
+                  </div>
+                  <div class="uploadinput">
+                    <label for="UserName" style="margin-left: 15%;">User Name:</label>
+                    <input type="text" id="UserName" required="required" autocomplete="off"  name="uname" maxlength="10">
+                    <br>
+                  </div>
+                  <div class="uploadinput">
+                    <label for="email" style="margin-left: 15%;">Email:</label>
+                    <input type="text" id="email" required="required" autocomplete="off"  name="email">
+                    <br> 
+                  </div>
+                  <div class="uploadinput">
+                    <label for="pass" style="margin-left: 15%;">Password:</label>
+                    <input type="text" id="pass" required="required" autocomplete="off"  name="pass">
+               <br>
+                </div>
+                <div class="uploadinput">
+                    <label for="pos" style="margin-left: 15%;">Post:</label>
+                    <input type="text" id="pos" required="required" autocomplete="off"  name="post">
+                    <br>
+                </div>
+                              
+                     
+                <button type="submit" style="margin: 5% 0% 3% 45%;" id="sub">Submit</button>
+              </form>
+          </div>
+    </div>   
+    <script>
+        var y=new Date().getFullYear();
+        var stat='<%-st%>';
+        if(stat==0)
+        window.alert("Staff add Successfully");
+        if(stat==1)
+        window.alert("Something went wrong");
+        for(i=0;i<5;i++)
+        document.getElementById("batch"+(i+1)).innerHTML=""+(y-i)+"-"+(y-i+4);
+        document.getElementById("batch").addEventListener("keyup",function(){
+        if(document.getElementById("batch").value.length>3)
+        document.getElementById("sem").removeAttribute("disabled");
+        if(document.getElementById("batch").value.length<9)
+        document.getElementById("sem").setAttribute("disabled","disabled");
+        });
+        var new1=0;
+        document.getElementById("st").addEventListener("click",function(){
+          if(new1==0)
+          {
+            document.getElementById("name").removeAttribute("disabled"); 
+            document.getElementById("email").removeAttribute("disabled");
+            document.getElementById("pass").removeAttribute("disabled");
+            document.getElementById("pos").removeAttribute("disabled");
+            new1=1;
+          }
+          else if(new1==1)
+          {
+            console.log(document.getElementById("st").value);
+            document.getElementById("name").removeAttribute("disabled");
+            document.getElementById("email").setAttribute("disabled","disabled");
+            document.getElementById("pass").setAttribute("disabled","disabled");
+            document.getElementById("pos").setAttribute("disabled","disabled");
+            new1=0; 
+          }
+        });
+    </script>   
+</body>
+</html>
