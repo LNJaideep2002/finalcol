@@ -113,6 +113,8 @@ app.post("/login",function(req,res)
     });
 });
 app.get("/changepass",function(req,res) {
+    if(user.username=="")
+    res.render("login",{st:2})
     res.render("achange",{...user,stats:0});
 });
 app.post("/password",function (req,res){
@@ -135,6 +137,8 @@ app.post("/password",function (req,res){
 });
 app.get("/addsubject",function(req,res)
 {
+    if(user.username=="")
+    res.render("login",{st:2})
     res.render("aaddsubject",{...user,stats:0});
 });
 app.post("/addsubject1",function(req,res){
@@ -203,6 +207,8 @@ app.post("/addsubject1",function(req,res){
 });
 app.get("/addteacher",function(req,res)
 {
+    if(user.username=="")
+    res.render("login",{st:2})
     res.render("aaddtecher",{st:2,username:user.username});
 });
 app.post("/aaddteacherdata",function(req,res)
@@ -236,6 +242,8 @@ app.post("/aaddteacherdata",function(req,res)
 });
 app.get("/addexam",function(req,res)
 {
+    if(user.username=="")
+    res.render("login",{st:2})
     model_subject.find({id:1},function(err,data)
     {
     res.render("addexam",{status:0,username:user.username,subjects:data[0].Subject})
@@ -267,6 +275,8 @@ app.post("/exam",function(req,res)
 })
 app.get("/uploadfile",function(req,res)
 {
+    if(user.username=="")
+    res.render("login",{st:2})
     model_subject.find({id:1},function(err,data)
     {
         model_batch.find({},function(err,data1)
@@ -311,7 +321,8 @@ app.post("/uploading",function(req,res)
 app.get("/generatefile",function(req,res)
 {
     var filemiss=[]
-    
+    if(user.username=="")
+    res.render("login",{st:2})
     model_subject.find({id:1},function(err,data)
     {
         res.render("generatefile",{username:user.username,subjects:data[0].Subject,filemiss,genst:0});
@@ -426,5 +437,8 @@ app.post("/generate",function(req,res)
     })
 });
 app.get("/generatedfile",function (req,res){
+
+    if(user.username=="")
+    res.render("login",{st:2})
     res.sendFile(__dirname+"\\"+user.generatedfile);
 })
