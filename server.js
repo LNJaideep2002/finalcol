@@ -41,6 +41,7 @@ app.get("/",function(req,res)
 app.post("/login",function(req,res)
 {
 
+    console.log(req);
     model_login.find({},function(err,data){
         var t=0;
         if("admin@gmail.com"==req.body.email)
